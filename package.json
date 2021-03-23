@@ -1,0 +1,31 @@
+{
+  "name": "File-Sharding",
+  "version": "1.0.0",
+  "description": "File sharding cryptography project - Winter Semester 2021",
+  "main": "mainModule.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
+    "cryptr": "^6.0.2",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "split-file": "^2.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sid370/File-Sharding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sid370/File-Sharding/issues"
+  },
+  "homepage": "https://github.com/sid370/File-Sharding#readme"
+}
