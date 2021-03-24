@@ -6,6 +6,7 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const morgan = require("morgan")
+const cors = require("cors")
 
 class CryptoBlock{
     constructor(index,timestamp,owner,data,fileNumber,precedingHash='',nextHash=''){
@@ -76,6 +77,7 @@ let fileHandler = new Blockchain()
 app.use(morgan("dev"))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+app.use(cors())
 
 app.post('/addBlock',async (req,res,next)=>{
     await fileHandler.addNewBlock(new CryptoBlock(fileHandler.getIndex()+1,new Date(),req.body.owner,req.body.data,req.body.fno))

@@ -7,6 +7,8 @@ const multer = require('multer')
 const fs = require('fs')
 const splitFile = require('split-file')
 const { spawn } = require('child_process')
+global.fetch = require("node-fetch");
+const SHA256 = require("crypto-js/sha256")
 
 app.use(morgan("dev"))
 app.use(cors())
@@ -30,35 +32,48 @@ app.post('/file', upload.single('file'), async (req, res, next) => {
 
     var data = ''
 
-
-    const cmd = spawn('split-file', ['-s', './uploads/' + fileName, 3])
+    let uniqueName = ''
+    const cmd = await spawn('split-file', ['-s', './uploads/' + fileName, 3])
     cmd.stdout.on('data', (data) => {
         console.log(`Data: ${data}`)
+        
         for (var i = 0; i < 3; i++) {
-            var name = fileName + '.sf-part' + (i + 1)
+            var name = './uploads/'+fileName + '.sf-part' + (i + 1)
+            let fname = SHA256(fileName).toString()
+            uniqueName=fname
+            fs.readFile(name, 'utf8',  (err, val) => {
+                // if (err) return res.status(404).json({
+                //     message: 'some error occured'
+                // })
 
-            fs.readFile(name, 'utf8', async (err, val) => {
-                if (err) res.status(404).json({
-                    message: 'some error occured'
-                })
-                data: val
-                var myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-                var urlencoded = new URLSearchParams();
-                urlencoded.append("owner", req.body.owner);
-                urlencoded.append("data",data);
-                urlencoded.append("fno", "13");
+                if (err)    console.warn(err)
+                let bodyData = val
+                //console.log(bodyData)
+                //var myHeaders = new Headers();
+                //myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                
+                bodyData={
+                    owner: req.body.owner,
+                    data: bodyData,
+                    fno: fname
+                }
 
+                console.log('Data: ',bodyData)
                 var requestOptions = {
                     method: 'POST',
-                    body: urlencoded
+                    mode: 'cors',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyData)
                 };
 
-                await fetch("localhost:3000/addBlock", requestOptions)
+                fetch("http://localhost:3000/addBlock", requestOptions)
                     .then(response => response.text())
                     .then(result => console.log(result))
                     .catch(error => console.log('error', error));
             })
+
 
 
         }
@@ -70,11 +85,12 @@ app.post('/file', upload.single('file'), async (req, res, next) => {
 
     cmd.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
+        res.status(200).json({
+            message: 'File Uploaded',
+            UUID: uniqueName
+        })
     });
 
-    res.status(200).json({
-        message: 'File Uploaded',
-    })
 })
 
 app.listen(4000)
