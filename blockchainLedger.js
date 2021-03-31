@@ -50,6 +50,7 @@ class Blockchain{
         newBlock.precedingHash=this.obtainLatestBlock().hash
         this.obtainLatestBlock().nextHash=newBlock.hash
         this.blockchain.push(newBlock)
+        //cthis.blockchainLog(this.blockchain)
         fs.writeFileSync('blockchain',JSON.stringify(this.blockchain))
     }
 
@@ -57,6 +58,14 @@ class Blockchain{
         return this.obtainLatestBlock().index
     }
 
+    blockchainLog(data){
+        data=JSON.stringify(data)
+        var result=""
+        for (var i=0;i<data.length;i++)
+            result=result+data.charCodeAt(i)+" "
+        console.log(result)
+    }
+    
     getData(fno){
         for (var i=0;i<this.blockchain.length;i++){
             if (this.blockchain[i].fno===fno){
@@ -100,7 +109,6 @@ app.post('/clearChain',(req,res,next)=>{
 
 app.get('/getChain/:fno',(req,res,next)=>{
     var data = fileHandler.getData(req.params.fno)
-    console
     console.log(data)
     res.status(200).json({
         blockData: data

@@ -11,7 +11,6 @@ global.fetch = require("node-fetch");
 const SHA256 = require("crypto-js/sha256")
 const { response } = require('express')
 const Cryptr = require("cryptr")
-const { pathToFileURL } = require('url')
 const cryptr = new Cryptr("SecretKey10")
 var path = require("path")
 
@@ -49,7 +48,7 @@ app.post('/file', upload.single('file'), async (req, res, next) => {
     nameArray.push('./uploads/' + fileName)
     const cmd = await spawn('split-file', ['-s', './uploads/' + fileName, 3])
     cmd.stdout.on('data', (data) => {
-        console.log(`Data: ${data}`)
+        //console.log(`Data: ${data}`)
 
         for (var i = 0; i < 3; i++) {
 
@@ -69,7 +68,7 @@ app.post('/file', upload.single('file'), async (req, res, next) => {
                     fno: fname
                 }
 
-                console.log('Data: ', bodyData)
+                //console.log('Data: ', bodyData)
                 var requestOptions = {
                     method: 'POST',
                     mode: 'cors',
@@ -146,20 +145,15 @@ app.get('/genFile/:uid', async (req, res, next) => {
                         .then(async response => {
                             fileData = fileData + response.blockData.data
 
-                            fs.writeFile("./" + req.params.uid + ".txt",fileData,(err)=>{
+                            fs.writeFile("./generated/" + req.params.uid + ".txt", fileData, (err) => {
                                 if (err)
-                                res.status(404).json({
-                                    message: 'Some error occured while creating the file'
-                                })
+                                    res.status(404).json({
+                                        message: 'Some error occured while creating the file'
+                                    })
 
-                                res.download("./" + req.params.uid + ".txt")
+                                res.download("./generated/" + req.params.uid + ".txt")
                             })
 
-                            await res.download("./" + req.params.uid + ".txt")
-
-                            // res.sendFile(req.params.uid + ".txt", { root: path.join(__dirname) }, (err) => {
-                            //     (err)? console.warn(err):null
-                            // })
                         })
 
                 })
