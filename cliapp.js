@@ -5,6 +5,8 @@ var inquirer = require("inquirer");
 const { exec, spawn } = require("child_process");
 const { fs } = require("fs");
 global.fetch = require("node-fetch");
+const ora = require("ora");
+const spinner = ora({color: "blue"})
 
 inquirer
   .prompt([
@@ -33,7 +35,9 @@ inquirer
             if (stderr) {
               console.warn(chalk.red(stderr));
             }
-            console.log(chalk.cyan("file copied"));
+            //console.log(chalk.cyan("Processing..."));
+            console.log()
+            spinner.start('Processing the File...\n')
 
             var splt = answers.dir.split("/");
             var fname = splt[splt.length - 1];
@@ -47,6 +51,7 @@ inquirer
             })
               .then((res) => res.json())
               .then((res) => {
+                spinner.stop()
                 console.log();
                 console.log(chalk.cyan("UUID: "), chalk.yellow(res.UUID));
                 console.log();
@@ -67,6 +72,7 @@ inquirer
                 });
               })
               .catch((err) => {
+                spinner.stop()
                 console.log(chalk.reset(err));
               });
           });

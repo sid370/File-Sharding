@@ -40,22 +40,22 @@ function deleteFiles(array) {
 
 app.post('/cli/file/:path', (req, res, next) => {
 
-    fileName=req.params.path
-    console.log(fileName)
+    file_name=req.params.path
+    console.log(file_name)
     //console.log(req.body.name)
     var data = ''
 
     let uniqueName = ''
 
     nameArray = []
-    nameArray.push('./uploads/' + fileName)
-    const cmd = spawn('split-file', ['-s', './uploads/' + fileName, 3])
+    nameArray.push('./uploads/' + file_name)
+    const cmd = spawn('split-file', ['-s', './uploads/' + file_name, 3])
     cmd.stdout.on('data', (data) => {
         //console.log(`Data: ${data}`)
 
         for (var i = 0; i < 3; i++) {
 
-            var name = './uploads/' + fileName + '.sf-part' + (i + 1)
+            var name = './uploads/' + file_name + '.sf-part' + (i + 1)
             nameArray.push(name)
 
             let fname = SHA256(name + new Date()).toString()
@@ -223,6 +223,8 @@ app.get('/genFile/:uid', async (req, res, next) => {
 
                                 res.download("./generated/" + req.params.uid + ".txt")
                             })
+                            
+
 
                         })
 
