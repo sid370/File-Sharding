@@ -109,7 +109,6 @@ app.post('/clearChain',(req,res,next)=>{
 
 app.get('/getChain/:fno',(req,res,next)=>{
     var data = fileHandler.getData(req.params.fno)
-    console.log(data)
     res.status(200).json({
         blockData: data
     })
