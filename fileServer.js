@@ -224,7 +224,9 @@ app.get('/genFile/:uid', async (req, res, next) => {
                                 res.download("./generated/" + req.params.uid + ".txt")
                             })
                             
-
+                            setTimeout(()=>{
+                                fs.unlinkSync("./generated/" + req.params.uid + ".txt")
+                            },5000)
 
                         })
 
