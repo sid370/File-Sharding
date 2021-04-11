@@ -5,3 +5,5 @@ uploads/*
 
 generated/*
 !generated/.gitkeep
+
+.env
